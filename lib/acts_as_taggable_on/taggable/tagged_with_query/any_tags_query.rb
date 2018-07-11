@@ -2,6 +2,8 @@ module ActsAsTaggableOn::Taggable::TaggedWithQuery
   class AnyTagsQuery < QueryBase
     def build
       taggable_model.select(all_fields)
+                    .joins(join_project)
+                    .where(where_project)
                     .where(model_has_at_least_one_tag)
                     .order(Arel.sql(order_conditions))
                     .readonly(false)
@@ -11,6 +13,14 @@ module ActsAsTaggableOn::Taggable::TaggedWithQuery
 
     def all_fields
       taggable_arel_table[Arel.star]
+    end
+
+    def join_project
+      :project if options[:project_id]
+    end
+
+    def where_project
+      "#Issue.table_name}.project_id in (#{Project.find_by_id(options[:project_id]).self_and_descendants.collect{|i| i.id}.join(',')})" if options[:project_id]
     end
 
     def model_has_at_least_one_tag
