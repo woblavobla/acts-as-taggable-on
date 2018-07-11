@@ -61,10 +61,10 @@ module ActsAsTaggableOn::Taggable
     end
 
     def related_where(klass, conditions)
-      klass.select("#{klass.table_name}.*, COUNT(#{ActsAsTaggableOn::Tag.table_name}.#{ActsAsTaggableOn::Tag.primary_key}) AS count")
+      klass.select("#{klass.table_name}.*, COUNT(#{ActsAsTaggableOn::Tag.table_name}.#{ActsAsTaggableOn::Tag.primary_key}) AS tcount")
       .from("#{klass.table_name}, #{ActsAsTaggableOn::Tag.table_name}, #{ActsAsTaggableOn::Tagging.table_name}")
       .group(group_columns(klass))
-      .order('count DESC')
+      .order('tcount DESC')
       .where(conditions)
     end
   end
