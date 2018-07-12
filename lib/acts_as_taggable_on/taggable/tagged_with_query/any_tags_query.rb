@@ -20,7 +20,7 @@ module ActsAsTaggableOn::Taggable::TaggedWithQuery
     end
 
     def where_project
-      "{#Issue.table_name}.project_id in (#{Project.find_by_id(options[:project_id]).self_and_descendants.collect{|i| i.id}.join(',')})" if options[:project_id]
+      "#{Issue.table_name}.project_id in (#{Project.find_by_id(options[:project_id]).self_and_descendants.collect{|i| i.id}.join(',')})" if options[:project_id]
     end
 
     def model_has_at_least_one_tag
